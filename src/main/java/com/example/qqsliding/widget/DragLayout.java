@@ -1,6 +1,7 @@
 package com.example.qqsliding.widget;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -9,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.example.qqsliding.adapter.ItemAdapter;
 
 /**
  * Created by 若兰 on 2016/1/31.
@@ -46,6 +49,10 @@ public class DragLayout extends FrameLayout {
      */
     private Status mStatus = Status.CLOSE;
 
+
+    public Status getStatus() {
+        return mStatus;
+    }
 
     /**
      * 状态枚举
@@ -400,6 +407,10 @@ public class DragLayout extends FrameLayout {
         open(true);
     }
 
+    private ItemAdapter adapter;
+
+
+    float mDownX;
     /**
      * 2、传递触摸事件
      *
@@ -408,6 +419,30 @@ public class DragLayout extends FrameLayout {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        if(getStatus() == Status.CLOSE){
+            int actionMasked = MotionEventCompat.getActionMasked(ev);
+            switch (actionMasked) {
+                case MotionEvent.ACTION_DOWN:
+                    mDownX = ev.getRawX();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+
+                    if(adapter.getOpenItems() > 0){
+                        return false;
+                    }
+
+                    float delta = ev.getRawX() - mDownX;
+                    if(delta < 0){
+                        return false;
+                    }
+                    break;
+                default:
+                    mDownX = 0;
+                    break;
+            }
+        }
+
         return mDragHelper.shouldInterceptTouchEvent(ev);
     }
 
@@ -490,5 +525,12 @@ public class DragLayout extends FrameLayout {
             return mRange;
         }
         return left;
+    }
+
+
+
+    public void setAdapterInterface(ItemAdapter adapter) {
+        this.adapter = adapter;
+
     }
 }

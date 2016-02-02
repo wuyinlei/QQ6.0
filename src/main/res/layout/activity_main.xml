@@ -8,12 +8,11 @@
     android:background="#000"
     tools:context=".activity.MainActivity">
 
-
         <include layout="@layout/left_view_layout"/>>
 
 
     <LinearLayout
-
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF">
@@ -25,6 +24,7 @@
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/head"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="15dp"
@@ -43,5 +43,11 @@
                 android:layout_marginRight="15dp"
                 android:src="@mipmap/icon_search"/>
         </RelativeLayout>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
     </LinearLayout>
 </com.example.qqsliding.widget.DragLayout>
