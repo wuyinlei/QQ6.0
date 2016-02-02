@@ -1,15 +1,17 @@
 package com.example.qqsliding.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.qqsliding.R;
-import com.example.qqsliding.adapter.ItemAdapter;
+import com.example.qqsliding.adapter.DividerItemDecoration;
+import com.example.qqsliding.adapter.ItemRecycleAdapter;
 import com.example.qqsliding.adapter.LeftItemAdapter;
 import com.example.qqsliding.widget.DragLayout;
 import com.nineoldandroids.view.ViewHelper;
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DragLayout dl;
     private ListView lv;
-    private ListView listView;
+    private RecyclerView recycleview;
     private List<String> mLists = new ArrayList<>();
 
     private ImageView head;
@@ -31,50 +33,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dl = (DragLayout) findViewById(R.id.dl);
-        head = (ImageView) findViewById(R.id.head);
+        initViews();
 
 
+        initRecycleView();
 
-        final ItemAdapter adapter = initListView();
+        initData();
 
-        initListener(adapter);
-
-
-       /* dl.setDragStateListener(new DragLayout.OnDragStatusListener() {
-            @Override
-            public void onClose() {
-                Log.d("MainActivity", "关闭");
-            }
-
-            @Override
-            public void onOpen() {
-                Log.d("MainActivity", "打开");
-            }
-
-            @Override
-            public void onDraging(float percent) {
-                Log.d("MainActivity", "拖拽");
-            }
-        });*/
+        initListener();
     }
 
-    private void initListener(final ItemAdapter adapter) {
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+    private void initRecycleView() {
+        recycleview = (RecyclerView) findViewById(R.id.recycleview);
+        recycleview.setLayoutManager(new LinearLayoutManager(this));
+        recycleview.setItemAnimator(new DefaultItemAnimator());
+        recycleview.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL_LIST));
+    }
+
+    private void initViews() {
+        dl = (DragLayout) findViewById(R.id.dl);
+        head = (ImageView) findViewById(R.id.head);
+        lv = (ListView) findViewById(R.id.lv);
+        lv.setAdapter(new LeftItemAdapter(this));
+    }
+
+    private void initListener() {
+
+        final ItemRecycleAdapter adapter = new ItemRecycleAdapter(MainActivity.this, mLists);
+        dl.setAdapterInterface(adapter);
+        recycleview.setAdapter(adapter);
+
+        recycleview.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    //在滑动的时候关闭拖拽出来的item
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     adapter.closeAllLayout();
                 }
             }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
         });
-
         dl.setDragStateListener(new DragLayout.OnDragStatusListener() {
             @Override
             public void onClose() {
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onOpen() {
-
             }
 
             @Override
@@ -102,21 +99,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @NonNull
-    private ItemAdapter initListView() {
-        lv = (ListView) findViewById(R.id.lv);
-        lv.setAdapter(new LeftItemAdapter(this));
-        // Toast.makeText(this, "你好", 1).show();
-
-        initData();
-        listView = (ListView) findViewById(R.id.listView);
-        final ItemAdapter adapter = new ItemAdapter(this,mLists);
-
-        //在这里把adapter传递了，为了使当我们的item拖拽出来的时候，我们要禁止左滑这个item的时候防止我的左侧view的出现
-        dl.setAdapterInterface(adapter);
-        listView.setAdapter(adapter);
-        return adapter;
-    }
 
     private void initData() {
         for (int i = 0; i < 20; i++) {

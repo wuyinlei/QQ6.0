@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.example.qqsliding.adapter.ItemAdapter;
+import com.example.qqsliding.adapter.ItemRecycleAdapter;
 
 /**
  * Created by 若兰 on 2016/1/31.
@@ -407,7 +407,7 @@ public class DragLayout extends FrameLayout {
         open(true);
     }
 
-    private ItemAdapter adapter;
+    private ItemRecycleAdapter adapter;
 
 
     float mDownX;
@@ -529,7 +529,7 @@ public class DragLayout extends FrameLayout {
 
 
 
-    public void setAdapterInterface(ItemAdapter adapter) {
+    public void setAdapterInterface(ItemRecycleAdapter adapter) {
         this.adapter = adapter;
 
     }

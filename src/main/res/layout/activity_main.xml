@@ -8,14 +8,14 @@
     android:background="#000"
     tools:context=".activity.MainActivity">
 
-        <include layout="@layout/left_view_layout"/>>
+    <include layout="@layout/left_view_layout"/>>
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:background="#FFFFFF"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,11 +43,13 @@
                 android:layout_marginRight="15dp"
                 android:src="@mipmap/icon_search"/>
         </RelativeLayout>
-        <ListView
-            android:id="@+id/listView"
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
+
 </com.example.qqsliding.widget.DragLayout>
