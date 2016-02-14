@@ -1,6 +1,7 @@
 package com.example.qqsliding.adapter;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.qqsliding.R;
 import com.example.qqsliding.widget.SwipeLayout;
+import com.example.qqsliding.widget.ViscosityListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,12 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
     private Context mContext;
     private LayoutInflater mInflater;
 
+    private List<Integer> removePoint = new ArrayList<>();
+
     private List<SwipeLayout> openItems;
     private List<String> mDatas;
+
+    boolean isOpen = false;
 
     public ItemRecycleAdapter(Context context, List<String> lists) {
         mContext = context;
@@ -42,10 +48,12 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
     }
 
 
+    /**
+     * 关闭所有的layout
+     */
     public void closeAllLayout() {
         if (openItems.size() == 0)
             return;
-
         for (SwipeLayout l : openItems) {
             l.close();
         }
@@ -56,7 +64,7 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mInflater = LayoutInflater.from(parent.getContext());
-        View view = mInflater.inflate(R.layout.item_layout, parent,false);
+        View view = mInflater.inflate(R.layout.item_layout, parent, false);
 
         return new MyViewHolder(view);
     }
@@ -75,6 +83,7 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
             @Override
             public void onOpen(SwipeLayout mSwipeLayout) {
                 openItems.add(mSwipeLayout);
+                isOpen = true;
             }
 
             @Override
@@ -108,6 +117,38 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
          * 在这里实现只能拖拽出来一个item，拖拽其他的时候，要把之前已经拖拽出的给关闭
          */
 
+        //得到红点的布局
+        TextView textView = holder.point;
+
+        //判断是否已经移除了，如果是在移除的集合中，代表已经移除，如果没有，就没有移除
+        boolean isRemoved = !removePoint.contains(position);
+        //判断是否显示  如果已经移除了，就不显示，没有移除就显示
+        textView.setVisibility(isRemoved ? View.VISIBLE : View.GONE);
+        if (isRemoved){
+            textView.setText(position + "");
+            textView.setTag(position);
+            if (openItems.size() == 0) {
+                ViscosityListener mViscosityListener = new ViscosityListener(mContext, textView) {
+                    @Override
+                    public void onDisappear(PointF mDragCenter) {
+                        super.onDisappear(mDragCenter);
+                        removePoint.add(position);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onReset(boolean isOutOfRange) {
+                        super.onReset(isOutOfRange);
+                        notifyDataSetChanged();
+                    }
+
+                };
+                    textView.setOnTouchListener(mViscosityListener);
+
+            }
+        }
+
+
     }
 
     @Override
@@ -119,14 +160,14 @@ public class ItemRecycleAdapter extends RecyclerView.Adapter<ItemRecycleAdapter.
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvCall, tvDelete;
         TextView tvName;
+        TextView point;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             tvCall = (TextView) itemView.findViewById(R.id.tvCall);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvDelete = (TextView) itemView.findViewById(R.id.tvDelete);
-
-
+            point = (TextView) itemView.findViewById(R.id.point);
         }
     }
 }

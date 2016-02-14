@@ -4,7 +4,7 @@
     android:id="@+id/swipeLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="70dp"
     android:background="#33000000">
     <LinearLayout
         android:layout_width="wrap_content"
@@ -13,8 +13,8 @@
 
         <TextView
             android:id="@+id/tvCall"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="#88000000"
             android:gravity="center"
             android:text="Call Me"
@@ -22,34 +22,50 @@
 
         <TextView
             android:id="@+id/tvDelete"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="#ff0000"
             android:gravity="center"
             android:text="删除"
             android:textColor="#fff"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:id="@+id/front"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:background="#ffffff" >
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:src="@mipmap/head"/>
+            android:id="@+id/iv_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/head"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            />
 
         <TextView
+            android:layout_toRightOf="@id/iv_head"
             android:id="@+id/tvName"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:text="名字"
-            android:textSize="24dp"/>
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/red_bg"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
 </com.example.qqsliding.widget.SwipeLayout>

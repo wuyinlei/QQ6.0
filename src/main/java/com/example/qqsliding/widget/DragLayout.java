@@ -1,7 +1,6 @@
 package com.example.qqsliding.widget;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -409,8 +408,7 @@ public class DragLayout extends FrameLayout {
 
     private ItemRecycleAdapter adapter;
 
-
-    float mDownX;
+    float mDownX ;
     /**
      * 2、传递触摸事件
      *
@@ -421,17 +419,17 @@ public class DragLayout extends FrameLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 
         if(getStatus() == Status.CLOSE){
-            int actionMasked = MotionEventCompat.getActionMasked(ev);
-            switch (actionMasked) {
+            switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    //获取到按压的是否的x坐标
                     mDownX = ev.getRawX();
                     break;
                 case MotionEvent.ACTION_MOVE:
-
+                    //如果在移动的时候，item打开的个数大于0，就不拦截事件
                     if(adapter.getOpenItems() > 0){
                         return false;
                     }
-
+                    //如果是向左滑，就不拦截事件(不用判断也行)
                     float delta = ev.getRawX() - mDownX;
                     if(delta < 0){
                         return false;
@@ -442,7 +440,6 @@ public class DragLayout extends FrameLayout {
                     break;
             }
         }
-
         return mDragHelper.shouldInterceptTouchEvent(ev);
     }
 
@@ -531,6 +528,5 @@ public class DragLayout extends FrameLayout {
 
     public void setAdapterInterface(ItemRecycleAdapter adapter) {
         this.adapter = adapter;
-
     }
 }
